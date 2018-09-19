@@ -13,17 +13,17 @@ script:
 
   # add config for prod versions. "Dockerfile" does not have to be specified here because it is used as default when building
 after_success: 
-  - docker build -t maxblanck/multi-client ./client
-  - docker build -t maxblanck/multi-nginx ./nginx
-  - docker build -t maxblanck/multi-server ./server
-  - docker build -t maxblanck/multi-worker ./worker
+  - docker build -t maxbl/multi-client ./client
+  - docker build -t maxbl/multi-nginx ./nginx
+  - docker build -t maxbl/multi-server ./server
+  - docker build -t maxbl/multi-worker ./worker
   # login in to docker cli, tell docker that it can receive password via stdin
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin 
   #  Push images to hub
-  - docker push maxblanck/multi-client
-  - docker push maxblanck/multi-nginx
-  - docker push maxblanck/multi-server
-  - docker push maxblanck/multi-worker
+  - docker push maxbl/multi-client
+  - docker push maxbl/multi-nginx
+  - docker push maxbl/multi-server
+  - docker push maxbl/multi-worker
 
   # deploy: 
   # provider: elasticbeanstalk

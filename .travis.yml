@@ -1,28 +1,39 @@
-# Every time we push code, travis clones the git files, builds the image and runs the test suite
-
-# We need super user permission
 sudo: required
-# Tell travis that we need docker
 services: 
   - docker
 
+  # build client container (server and worker do not have tests here, but can also be added in future).
+  # We use Dockerfile.dev because in dev all dependencies are included NOT just the ones incl. in Prod
 before_install:
-  - docker build -t maxblanck/docker-react -f Dockerfile.dev .
+  - docker build -t maxblanck/react-test -f ./client/Dockerfile.dev ./client
 
-# series of command which have to be executed. "-- --coverage" to make sure test automatically exits
+  # test sections added here, overwrite default command
 script:
-  - docker run maxblanck/docker-react npm run test -- --coverage
+  - docker run maxblanck/react-test npm run test -- --coverage
 
-# Create new Elastic beanstalk Service in AWS with plattform docker selected 
-deploy: 
-  provider: elasticbeanstalk
-  region: "us-east-2"
-  app: "docker-react"
-  env: "DockerReact-env"
-  bucket_name: "elasticbeanstalk-us-east-2-159344145130"
-  bucket_path: "docker-react"
-  on:
-    branch: master 
-  access_key_id: $AWS_ACCESS_KEY
-  secret_access_key:  
-    secure: "$AWS_SECRET_KEY"
+  # add config for prod versions. "Dockerfile" does not have to be specified here because it is used as default when building
+after_success: 
+  - docker build -t maxblanck/multi-client ./client
+  - docker build -t maxblanck/multi-nginx ./nginx
+  - docker build -t maxblanck/multi-server ./server
+  - docker build -t maxblanck/multi-worker ./worker
+  # login in to docker cli, tell docker that it can receive password via stdin
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin 
+  #  Push images to hub
+  - docker push maxblanck/multi-client
+  - docker push maxblanck/multi-nginx
+  - docker push maxblanck/multi-server
+  - docker push maxblanck/multi-worker
+
+  # deploy: 
+  # provider: elasticbeanstalk
+  # region: "us-east-2"
+  # app: "docker-react"
+  # env: "DockerReact-env"
+  # bucket_name: "elasticbeanstalk-us-east-2-159344145130"
+  # bucket_path: "docker-react"
+  # on:
+  #   branch: master 
+  # access_key_id: $AWS_ACCESS_KEY
+  # secret_access_key:  
+  #   secure: "$AWS_SECRET_KEY"

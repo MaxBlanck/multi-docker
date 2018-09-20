@@ -19,7 +19,7 @@ after_success:
   - docker build -t maxbl/multi-worker ./worker
   # login in to docker cli, tell docker that it can receive password via stdin
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin 
-  #  Push images to hub
+  #  Push images to hub. IMPORTANT!: Here the image tag name MUST refer to docker hub repository namespace. In my case "maxbl"
   - docker push maxbl/multi-client
   - docker push maxbl/multi-nginx
   - docker push maxbl/multi-server

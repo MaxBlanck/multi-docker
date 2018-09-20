@@ -24,7 +24,7 @@
     },
     {
         "name": "nginx",
-        "image": "maxbl/multi-nginex",
+        "image": "maxbl/multi-nginx",
         "hostname": "nginx",
         "essential": true,
         "memory": 128,

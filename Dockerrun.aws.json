@@ -1,0 +1,35 @@
+{
+ "AWSEBDockerrunVersion": 2,
+ "containerDefinitions": [
+     {
+         "name": "client",
+         "image": "maxbl/multi-client",
+         "hostname": "client",
+         "essential": false
+     },
+     {
+        "name": "server",
+        "image": "maxbl/multi-server",
+        "hostname": "api",
+        "essential": false
+    },
+    {
+        "name": "worker",
+        "image": "maxbl/multi-worker",
+        "hostname": "worker",
+        "essential": false
+    },
+    {
+        "name": "nginx",
+        "image": "maxbl/multi-nginex",
+        "hostname": "nginx",
+        "essential": true,
+        "portMappings": 
+            [{
+            "hostPort": 80,
+            "containerPort": 80
+            }],
+        "links": ["client","server"]
+    }
+ ]   
+}

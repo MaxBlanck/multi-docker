@@ -18,7 +18,7 @@ services:
       context: ./server
     volumes:
       - /app/node_modules
-      # anytime we make a change in server folder it is reflected in constainer's app folder! Except for node_modules!
+      # Anytime we make a change in server folder it is reflected in constainer's app folder! Except for node_modules!
       - ./server:/app 
     environment:
       - REDIS_HOST=redis

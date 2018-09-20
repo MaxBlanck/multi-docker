@@ -25,7 +25,7 @@ after_success:
   - docker push maxbl/multi-server
   - docker push maxbl/multi-worker
 
-  deploy: 
+deploy: 
   provider: elasticbeanstalk
   region: "us-east-2"
   app: "multi-docker"
